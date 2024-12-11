@@ -1,10 +1,12 @@
 package hust.soict.dsai.aims.media;
+
 import java.util.*;
 
 public class Book extends Media {
     
     private List<String> authors = new ArrayList<String>();
     
+    // Constructor 
     public Book(String title) {
         super(title);
     }
@@ -15,6 +17,7 @@ public class Book extends Media {
         super(title, category, cost);
     }
 
+    // Add and remove author 
     public void addAuthor(String authorName) {
         if (!authors.contains(authorName)) {
             authors.add(authorName);
@@ -31,6 +34,7 @@ public class Book extends Media {
         }
     }
 
+    @Override
     public String toString() {
         return this.getId() + " - Book: " + this.getTitle() +
                 " - Category: " + this.getCategory() +

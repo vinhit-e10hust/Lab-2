@@ -1,21 +1,30 @@
 package hust.soict.dsai.aims;
-
 import hust.soict.dsai.aims.cart.Cart;
 import hust.soict.dsai.aims.media.*;
 import hust.soict.dsai.aims.store.Store;
 import java.util.*;
 
+import javax.naming.LimitExceededException;
+
 public class Aims {
     private static Store store = new Store();
     private static Cart cart = new Cart();
-    public static void main(String[] args) {       
+
+    public static void main(String[] args) {
+        
+        // Init add media to the store
         initSetup();
+
         boolean exit = false;
+        // CLI
         while (!exit) {
-        	showMenu();
+            
+            showMenu();
+
             Scanner scanner = new Scanner(System.in);
             int option = scanner.nextInt();
             scanner.nextLine();
+
             switch (option) {
                 case 0:
                     exit = true;
@@ -38,7 +47,9 @@ public class Aims {
                     System.out.println("Invalid option, please choose again.");
                     break;
             }
+
         }
+
     }
     public static void clearConsole() {
         for (int i = 0; i < 50; i++) {
@@ -46,18 +57,23 @@ public class Aims {
         }
     }
     public static void initSetup() {
+
         DigitalVideoDisc dvd1 = new DigitalVideoDisc("The Lion King", "Animation", "Roger Allers", 87, 19.95f);     
         DigitalVideoDisc dvd2 = new DigitalVideoDisc("Star War", "Science Fiction", "George Lucas", 87, 24.95f); 
         DigitalVideoDisc dvd3 = new DigitalVideoDisc("Aladin", "Animation", 18.99f);
         store.addMedia(dvd1);
         store.addMedia(dvd2);
         store.addMedia(dvd3);
+
+    
         Book book = new Book("The Valley of Fear", "Detective", 20.00f);
         Book book1 = new Book("A Living Remedy: A Memoir", "Biography", 202.00f);
         Book book2 = new Book("On the Origin of Time: Stephen Hawking's Final Theory", "Science", 120.00f);
         store.addMedia(book);
         store.addMedia(book1);
         store.addMedia(book2);
+
+
         CompactDisc cd1 = new CompactDisc("Adele - 30", "Music","Adele", 1500.98f);
         Track track1CD1 = new Track("All Night Parking (interlude)", 161);
         Track track2CD1 = new Track("To Be Loved", 403);
@@ -65,6 +81,7 @@ public class Aims {
         cd1.addTrack(track1CD1);
         cd1.addTrack(track2CD1);
         cd1.addTrack(track3CD1);
+
         CompactDisc cd2 = new CompactDisc("The Gods We Can Touch", "Music","Aurora", 2000.22f);
         Track track1CD2 = new Track("Everything Matters", 180+34);
         Track track2CD2 = new Track("Blood in the Wine", 180+30);
@@ -72,16 +89,20 @@ public class Aims {
         cd2.addTrack(track1CD2);
         cd2.addTrack(track2CD2);
         cd2.addTrack(track3CD2);
+
         CompactDisc cd3 = new CompactDisc("Purpose", "Music","Justin Bieber", 1000.98f);
         Track track1CD3 = new Track("The Feeling", 4*60+5);
         Track track2CD3 = new Track("No Sense", 4*60+35);
         cd3.addTrack(track1CD3);
         cd3.addTrack(track2CD3);
+
         store.addMedia(cd1);
         store.addMedia(cd2);
         store.addMedia(cd3);
+        
         clearConsole();
     }
+    
     public static void showMenu() {
         System.out.println("AIMS: ");
         System.out.println("--------------------------------");
@@ -144,7 +165,11 @@ public class Aims {
                         }
                         Media media = store.search(title);
                         if (media != null) {
-                            cart.addMedia(media);
+                            try {
+                                cart.addMedia(media);
+                            } catch (LimitExceededException e) {
+                                e.printStackTrace();
+                            }
                             foundToAdd = true;
                         } else {
                             System.out.println("***MEDIA NOT FOUND***");
@@ -202,7 +227,11 @@ public class Aims {
                     back = true;
                     break;
                 case 1:
-                    cart.addMedia(media);
+                    try {
+                        cart.addMedia(media);
+                    } catch (LimitExceededException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case 2:
                     if (media instanceof Disc || media instanceof CompactDisc) {
@@ -366,6 +395,7 @@ public class Aims {
                         System.out.println("Enter book cost: ");
                         Float bookCost = scanner.nextFloat();
                         scanner.nextLine();
+
                         Book newBook = new Book(bookTitle, bookCategory, bookCost);
                         store.addMedia(newBook);
                     } else if (categoryChoice == 2) {
@@ -378,10 +408,14 @@ public class Aims {
                         System.out.println("Enter CD cost: ");
                         Float cdCost = scanner.nextFloat();
                         scanner.nextLine();
+
                         CompactDisc newCD = new CompactDisc(cdTitle, cdCategory, cdArtist, cdCost);
+
+                        
                         System.out.println("Do you want to add tracks to your CD? (1) Yes (0) No:");
                         int addTrack = scanner.nextInt();
                         scanner.nextLine();
+                        
                         if (addTrack == 1) {
                             System.out.println("How many tracks in your CD?");
                             int numTrack = scanner.nextInt();
@@ -393,6 +427,7 @@ public class Aims {
                                 System.out.println("Enter track length: ");
                                 int trackLength = scanner.nextInt();
                                 scanner.nextLine();
+
                                 Track newTrack = new Track(trackTitle, trackLength);
                                 newCD.addTrack(newTrack);
                             }
@@ -408,6 +443,7 @@ public class Aims {
                         System.out.println("Enter book cost: ");
                         Float dvdCost = scanner.nextFloat();
                         scanner.nextLine();
+                        
                         DigitalVideoDisc newDVD = new DigitalVideoDisc(dvdTitle, dvdCategory, dvdCost);
                         store.addMedia(newDVD);                
                     } else if (categoryChoice == 0) {
@@ -444,3 +480,4 @@ public class Aims {
         }
     }
 }
+       
